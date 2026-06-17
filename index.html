@@ -1076,14 +1076,96 @@
 
       @media (max-width: 600px) {
         nav {
-          padding: 0 1rem;
+          padding: 0 0.75rem;
+          height: auto;
+          min-height: 48px;
+          flex-wrap: nowrap;
+          gap: 6px;
+        }
+        .nav-brand {
+          font-size: 13px;
+          gap: 6px;
+          flex-shrink: 0;
+        }
+        .nav-brand span {
+          width: 22px;
+          height: 22px;
+          font-size: 11px;
+        }
+        .nav-brand-text {
+          display: none;
+        }
+        .nav-tabs {
+          gap: 1px;
+          flex-shrink: 0;
         }
         .nav-tab {
-          padding: 6px 9px;
-          font-size: 12px;
+          padding: 5px 8px;
+          font-size: 11px;
+          white-space: nowrap;
         }
         main {
-          padding: 1.25rem 1rem 3rem;
+          padding: 1rem 0.875rem 3rem;
+        }
+        .hero {
+          padding: 1.25rem 0 1rem;
+        }
+        .hero h1 {
+          font-size: 1.5rem;
+        }
+        .hero p {
+          font-size: 14px;
+        }
+        .trust {
+          gap: 10px;
+        }
+        .key-input-row {
+          flex-wrap: nowrap;
+          gap: 6px;
+        }
+        .key-input {
+          min-width: 0;
+          flex: 1;
+          font-size: 13px;
+          padding: 9px 10px;
+        }
+        #toggle-key {
+          padding: 9px 10px !important;
+          font-size: 12px;
+          flex-shrink: 0;
+        }
+        #toggle-key,
+        .btn-primary {
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+        .btn-primary {
+          padding: 9px 12px !important;
+          font-size: 13px;
+        }
+        .built-by-inner {
+          flex-direction: row;
+          align-items: flex-start;
+          gap: 10px;
+        }
+        .built-by-avatar {
+          width: 38px;
+          height: 38px;
+          font-size: 14px;
+          flex-shrink: 0;
+        }
+        .built-by-info {
+          min-width: 0;
+        }
+        .built-by-role {
+          font-size: 12px;
+        }
+        .built-by-links {
+          gap: 6px;
+        }
+        .built-by-link {
+          font-size: 11px;
+          padding: 3px 8px;
         }
         .compare-grid {
           grid-template-columns: 1fr;
@@ -1094,15 +1176,20 @@
         .calc-results {
           grid-template-columns: 1fr 1fr;
         }
-        .hero h1 {
-          font-size: 1.7rem;
+        .stats-row {
+          grid-template-columns: 1fr 1fr;
+        }
+        .pro-limits-grid {
+          grid-template-columns: 1fr !important;
         }
       }
     </style>
   </head>
   <body>
     <nav>
-      <div class="nav-brand"><span>⚡</span> Claude Token Explorer</div>
+      <div class="nav-brand">
+        <span>⚡</span><span class="nav-brand-text">Claude Token Explorer</span>
+      </div>
       <div class="nav-tabs">
         <button class="nav-tab active" onclick="showSection('chat', this)">
           Chat
@@ -1110,7 +1197,11 @@
         <button class="nav-tab" onclick="showSection('pricing', this)">
           Pricing
         </button>
-        <button class="nav-tab" onclick="showSection('compare', this)">
+        <button
+          class="nav-tab"
+          onclick="showSection('compare', this)"
+          style="white-space: nowrap"
+        >
           Pro vs API
         </button>
         <button class="nav-tab" onclick="showSection('learn', this)">
@@ -1141,6 +1232,54 @@
             <div class="trust-item">
               <div class="trust-dot"></div>
               Calls go directly from you to Anthropic
+            </div>
+          </div>
+        </div>
+
+        <!-- ABOUT BANNER -->
+        <div
+          style="
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+          "
+        >
+          <div style="font-size: 22px; flex-shrink: 0">🧭</div>
+          <div>
+            <div
+              style="
+                font-size: 14px;
+                font-weight: 500;
+                color: var(--text);
+                margin-bottom: 4px;
+              "
+            >
+              What is this tool?
+            </div>
+            <div style="font-size: 13px; color: var(--text2); line-height: 1.6">
+              A free, no-signup chat interface that shows you
+              <strong style="color: var(--text)"
+                >exact token counts and cost per message</strong
+              >
+              — something neither claude.ai nor the Anthropic Console shows you
+              in real time.<br />
+              <span
+                style="
+                  color: var(--text3);
+                  font-size: 12px;
+                  margin-top: 4px;
+                  display: block;
+                "
+              >
+                Useful for: API developers tracking spend · Claude Pro users
+                understanding why they hit limits · Anyone curious about how
+                tokens actually work.
+              </span>
             </div>
           </div>
         </div>
@@ -1527,15 +1666,16 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
               daily users
             </div>
             <div class="compare-item">
-              <span style="color: var(--red)">✗</span> Daily message caps
-              (size-weighted)
+              <span style="color: var(--red)">✗</span> 5-hour session limit +
+              weekly limit (size-weighted)
             </div>
             <div class="compare-item">
-              <span style="color: var(--red)">✗</span> Zero per-message token
-              visibility
+              <span style="color: var(--red)">✗</span> No per-message token
+              visibility (aggregate only)
             </div>
             <div class="compare-item">
-              <span style="color: var(--red)">✗</span> Credits don't roll over
+              <span style="color: var(--red)">✗</span> Subscription doesn't roll
+              over month to month
             </div>
             <div class="compare-item">
               <span style="color: var(--red)">✗</span> Can't build apps or
@@ -1580,6 +1720,117 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
             </div>
           </div>
         </div>
+
+        <!-- PRO LIMIT EXPLAINER -->
+        <div class="card" style="margin-bottom: 14px">
+          <div class="card-title">Pro plan — how limits actually work</div>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 10px;
+              margin-bottom: 12px;
+            "
+            class="pro-limits-grid"
+          >
+            <div
+              style="
+                background: var(--bg3);
+                border-radius: var(--radius);
+                padding: 12px;
+              "
+            >
+              <div
+                style="
+                  font-size: 11px;
+                  color: var(--text3);
+                  margin-bottom: 4px;
+                  text-transform: uppercase;
+                  letter-spacing: 0.06em;
+                "
+              >
+                Session limit
+              </div>
+              <div
+                style="
+                  font-size: 15px;
+                  font-weight: 600;
+                  color: var(--text);
+                  margin-bottom: 4px;
+                "
+              >
+                Resets every 5 hours
+              </div>
+              <div style="font-size: 12px; color: var(--text2)">
+                Rolling window. Heavy messages, long chats, and Opus usage drain
+                it faster. Check Settings → Usage on claude.ai.
+              </div>
+            </div>
+            <div
+              style="
+                background: var(--bg3);
+                border-radius: var(--radius);
+                padding: 12px;
+              "
+            >
+              <div
+                style="
+                  font-size: 11px;
+                  color: var(--text3);
+                  margin-bottom: 4px;
+                  text-transform: uppercase;
+                  letter-spacing: 0.06em;
+                "
+              >
+                Weekly limit
+              </div>
+              <div
+                style="
+                  font-size: 15px;
+                  font-weight: 600;
+                  color: var(--text);
+                  margin-bottom: 4px;
+                "
+              >
+                Resets weekly
+              </div>
+              <div style="font-size: 12px; color: var(--text2)">
+                Separate from session limit. Power users can hit both. Both are
+                compute-weighted, not message-count.
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              background: rgba(167, 139, 250, 0.06);
+              border: 1px solid rgba(167, 139, 250, 0.15);
+              border-radius: var(--radius);
+              padding: 12px;
+              font-size: 13px;
+              color: var(--text2);
+              line-height: 1.6;
+            "
+          >
+            <strong style="color: var(--accent)">Usage credits on Pro:</strong>
+            When you hit your session limit, you can enable "Usage credits" in
+            Settings → Usage to keep going at standard API rates — without
+            switching plans. It's pay-as-you-go on top of your $20 subscription.
+          </div>
+        </div>
+
+        <!-- API CONSOLE INFO -->
+        <div class="tip" style="border-left-color: var(--blue)">
+          <div class="tip-title" style="color: var(--blue)">
+            API users: deeper analytics at console.anthropic.com
+          </div>
+          <div class="tip-body">
+            The Anthropic Console gives API users a full dashboard — breakdown
+            by model, API key, and date down to minute granularity, rate limit
+            visualizations, and CSV export. Our tool shows you per-message live
+            cost; the Console shows your historical aggregate usage.
+          </div>
+        </div>
+
         <div class="card">
           <div class="card-title">Cost calculator — which plan suits you?</div>
           <div class="calc-inputs">
@@ -1938,6 +2189,261 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
           <div class="tip-body">
             "Please", "thank you", "could you kindly" — adds tokens with zero
             benefit to output quality.
+          </div>
+        </div>
+
+        <!-- PRO USAGE VISIBILITY -->
+        <div style="margin-top: 2rem; margin-bottom: 1.5rem">
+          <div class="sec-title">What Pro users can actually see</div>
+          <div class="sec-sub">
+            We said Pro has no token visibility — that's partially wrong. Here's
+            the full picture.
+          </div>
+        </div>
+        <div class="card" style="margin-bottom: 10px">
+          <div
+            style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px"
+            class="pro-limits-grid"
+          >
+            <div
+              style="
+                background: var(--green-bg);
+                border: 1px solid rgba(52, 211, 153, 0.15);
+                border-radius: var(--radius);
+                padding: 12px;
+              "
+            >
+              <div
+                style="
+                  font-size: 11px;
+                  color: var(--green);
+                  font-weight: 500;
+                  margin-bottom: 6px;
+                "
+              >
+                ✓ CAN see on claude.ai
+              </div>
+              <div
+                style="font-size: 13px; color: var(--text2); line-height: 1.5"
+              >
+                Session limit % used · Weekly limit % used · Time until session
+                resets · Usage credits balance
+              </div>
+              <div
+                style="font-size: 11px; color: var(--text3); margin-top: 6px"
+              >
+                Settings → Usage on claude.ai
+              </div>
+            </div>
+            <div
+              style="
+                background: var(--red-bg);
+                border: 1px solid rgba(248, 113, 113, 0.15);
+                border-radius: var(--radius);
+                padding: 12px;
+              "
+            >
+              <div
+                style="
+                  font-size: 11px;
+                  color: var(--red);
+                  font-weight: 500;
+                  margin-bottom: 6px;
+                "
+              >
+                ✗ CANNOT see
+              </div>
+              <div
+                style="font-size: 13px; color: var(--text2); line-height: 1.5"
+              >
+                Exact tokens per message · Cost per conversation · Which message
+                drained the most · Real-time input vs output split
+              </div>
+              <div
+                style="font-size: 11px; color: var(--text3); margin-top: 6px"
+              >
+                ← That's what this tool shows (API users)
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tip" style="border-left-color: var(--amber)">
+          <div class="tip-title">Why does my Pro session drain so fast?</div>
+          <div class="tip-body">
+            Limits are compute-weighted — not message-count. One message with a
+            50-page PDF + Opus model + Research tool enabled can drain your
+            5-hour session faster than 20 short Haiku messages. Long
+            conversation history also compounds on every turn.
+          </div>
+        </div>
+
+        <!-- CLAUDE CODE SECTION -->
+        <div style="margin-top: 2rem; margin-bottom: 1.5rem">
+          <div class="sec-title">For Claude Code users</div>
+          <div class="sec-sub">
+            Using Claude Code (CLI)? You have extra tools to manage tokens that
+            regular chat users don't.
+          </div>
+        </div>
+        <div class="card" style="margin-bottom: 10px">
+          <div class="card-title">In-session commands</div>
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <div
+              style="
+                background: var(--bg3);
+                border-radius: var(--radius);
+                padding: 12px;
+                display: flex;
+                gap: 12px;
+                align-items: flex-start;
+              "
+            >
+              <code
+                style="
+                  font-family: var(--mono);
+                  font-size: 13px;
+                  color: var(--accent);
+                  background: rgba(167, 139, 250, 0.1);
+                  padding: 3px 8px;
+                  border-radius: 5px;
+                  flex-shrink: 0;
+                "
+                >/clear</code
+              >
+              <div
+                style="font-size: 13px; color: var(--text2); line-height: 1.5"
+              >
+                Wipes full conversation history. Start fresh — project files and
+                CLAUDE.md stay. Use when switching tasks.
+                <strong style="color: var(--amber)">Cannot be undone.</strong>
+              </div>
+            </div>
+            <div
+              style="
+                background: var(--bg3);
+                border-radius: var(--radius);
+                padding: 12px;
+                display: flex;
+                gap: 12px;
+                align-items: flex-start;
+              "
+            >
+              <code
+                style="
+                  font-family: var(--mono);
+                  font-size: 13px;
+                  color: var(--accent);
+                  background: rgba(167, 139, 250, 0.1);
+                  padding: 3px 8px;
+                  border-radius: 5px;
+                  flex-shrink: 0;
+                "
+                >/compact</code
+              >
+              <div
+                style="font-size: 13px; color: var(--text2); line-height: 1.5"
+              >
+                Summarizes conversation history into a short recap, freeing
+                context while keeping essential context. Use mid-task when you
+                need to keep going.
+              </div>
+            </div>
+            <div
+              style="
+                background: var(--bg3);
+                border-radius: var(--radius);
+                padding: 12px;
+                display: flex;
+                gap: 12px;
+                align-items: flex-start;
+              "
+            >
+              <code
+                style="
+                  font-family: var(--mono);
+                  font-size: 13px;
+                  color: var(--accent);
+                  background: rgba(167, 139, 250, 0.1);
+                  padding: 3px 8px;
+                  border-radius: 5px;
+                  flex-shrink: 0;
+                "
+                >/cost</code
+              >
+              <div
+                style="font-size: 13px; color: var(--text2); line-height: 1.5"
+              >
+                Shows running spend for the current session (API key users
+                only). Track how much you've burned before switching models or
+                tasks.
+              </div>
+            </div>
+            <div
+              style="
+                background: var(--bg3);
+                border-radius: var(--radius);
+                padding: 12px;
+                display: flex;
+                gap: 12px;
+                align-items: flex-start;
+              "
+            >
+              <code
+                style="
+                  font-family: var(--mono);
+                  font-size: 13px;
+                  color: var(--accent);
+                  background: rgba(167, 139, 250, 0.1);
+                  padding: 3px 8px;
+                  border-radius: 5px;
+                  flex-shrink: 0;
+                "
+                >/model</code
+              >
+              <div
+                style="font-size: 13px; color: var(--text2); line-height: 1.5"
+              >
+                Switch models mid-session without losing conversation. Common
+                pattern: plan with Opus, execute with Sonnet.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tip" style="border-left-color: var(--green)">
+          <div class="tip-title">
+            ccusage — track Claude Code usage from terminal
+          </div>
+          <div class="tip-body">
+            <code
+              style="
+                font-family: var(--mono);
+                font-size: 12px;
+                color: var(--accent);
+              "
+              >npx ccusage</code
+            >
+            reads your local Claude Code session files and generates daily,
+            weekly, and per-session reports. No API key needed. Especially
+            useful for Pro/Max users since the Console doesn't show per-token
+            data for flat-rate plans.<br /><br />
+            <code
+              style="
+                font-family: var(--mono);
+                font-size: 12px;
+                color: var(--text3);
+              "
+              >npx ccusage blocks</code
+            >
+            — shows usage by 5-hour billing window<br />
+            <code
+              style="
+                font-family: var(--mono);
+                font-size: 12px;
+                color: var(--text3);
+              "
+              >npx ccusage daily --breakdown</code
+            >
+            — per-model cost breakdown
           </div>
         </div>
       </div>
