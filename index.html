@@ -1,0 +1,2303 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Claude Token Explorer — Understand your AI costs</title>
+    <meta
+      name="description"
+      content="A free tool to understand Claude API tokens, pricing, and how to save money. No signup required."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0f0f11;
+        --bg2: #18181c;
+        --bg3: #222228;
+        --border: rgba(255, 255, 255, 0.08);
+        --border2: rgba(255, 255, 255, 0.14);
+        --text: #f0f0f2;
+        --text2: #9898a8;
+        --text3: #5a5a6e;
+        --accent: #a78bfa;
+        --accent2: #7c3aed;
+        --green: #34d399;
+        --green-bg: rgba(52, 211, 153, 0.08);
+        --amber: #fbbf24;
+        --amber-bg: rgba(251, 191, 36, 0.08);
+        --red: #f87171;
+        --red-bg: rgba(248, 113, 113, 0.08);
+        --blue: #60a5fa;
+        --blue-bg: rgba(96, 165, 250, 0.08);
+        --radius: 10px;
+        --radius-lg: 14px;
+        --font: "Inter", sans-serif;
+        --mono: "JetBrains Mono", monospace;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font);
+        font-size: 15px;
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(15, 15, 17, 0.92);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 56px;
+      }
+      .nav-brand {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .nav-brand span {
+        width: 26px;
+        height: 26px;
+        background: var(--accent2);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+      }
+      .nav-tabs {
+        display: flex;
+        gap: 2px;
+      }
+      .nav-tab {
+        padding: 6px 14px;
+        border-radius: 7px;
+        font-size: 13px;
+        color: var(--text2);
+        cursor: pointer;
+        border: none;
+        background: none;
+        transition: all 0.15s;
+        font-family: var(--font);
+      }
+      .nav-tab:hover {
+        color: var(--text);
+        background: var(--bg3);
+      }
+      .nav-tab.active {
+        color: var(--accent);
+        background: rgba(167, 139, 250, 0.1);
+      }
+
+      main {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem 4rem;
+      }
+      .section {
+        display: none;
+      }
+      .section.active {
+        display: block;
+      }
+
+      .hero {
+        text-align: center;
+        padding: 2.5rem 0 2rem;
+      }
+      .hero-eyebrow {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--accent);
+        background: rgba(167, 139, 250, 0.1);
+        border: 1px solid rgba(167, 139, 250, 0.2);
+        padding: 4px 12px;
+        border-radius: 100px;
+        margin-bottom: 1.25rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .hero h1 {
+        font-size: clamp(1.8rem, 5vw, 2.8rem);
+        font-weight: 600;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+        letter-spacing: -0.02em;
+      }
+      .hero h1 em {
+        font-style: normal;
+        color: var(--accent);
+      }
+      .hero p {
+        font-size: 16px;
+        color: var(--text2);
+        max-width: 520px;
+        margin: 0 auto 1.5rem;
+      }
+      .trust {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 1.5rem;
+      }
+      .trust-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--text3);
+      }
+      .trust-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--green);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .card {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 14px;
+      }
+      .card-title {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text2);
+        margin-bottom: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .key-setup {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .key-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .key-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text);
+      }
+      .key-badge {
+        font-size: 11px;
+        padding: 3px 10px;
+        border-radius: 100px;
+        background: var(--bg3);
+        color: var(--text3);
+        border: 1px solid var(--border);
+      }
+      .key-input-row {
+        display: flex;
+        gap: 8px;
+      }
+      .key-input {
+        flex: 1;
+        background: var(--bg3);
+        border: 1px solid var(--border2);
+        border-radius: var(--radius);
+        padding: 10px 14px;
+        font-size: 14px;
+        color: var(--text);
+        font-family: var(--mono);
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      .key-input:focus {
+        border-color: var(--accent);
+      }
+      .key-input::placeholder {
+        color: var(--text3);
+        font-family: var(--font);
+      }
+      .key-note {
+        font-size: 12px;
+        color: var(--text3);
+        margin-top: 10px;
+        line-height: 1.5;
+      }
+      .key-note a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .key-note a:hover {
+        text-decoration: underline;
+      }
+
+      .btn {
+        padding: 10px 18px;
+        border-radius: var(--radius);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        font-family: var(--font);
+        transition: all 0.15s;
+      }
+      .btn-primary {
+        background: var(--accent2);
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #6d28d9;
+      }
+      .btn-ghost {
+        background: var(--bg3);
+        color: var(--text2);
+        border: 1px solid var(--border2);
+      }
+      .btn-ghost:hover {
+        color: var(--text);
+      }
+
+      .model-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+      .model-btn {
+        padding: 7px 14px;
+        border-radius: var(--radius);
+        font-size: 13px;
+        border: 1px solid var(--border2);
+        background: var(--bg3);
+        color: var(--text2);
+        cursor: pointer;
+        font-family: var(--font);
+        transition: all 0.15s;
+      }
+      .model-btn.active {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: rgba(167, 139, 250, 0.1);
+      }
+      .model-info {
+        font-size: 12px;
+        color: var(--text3);
+        margin-bottom: 1rem;
+        font-family: var(--mono);
+      }
+
+      .sys-label {
+        font-size: 12px;
+        color: var(--text2);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .sys-label span {
+        color: var(--text3);
+        font-size: 11px;
+      }
+      .sys-textarea {
+        width: 100%;
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 10px 14px;
+        font-size: 13px;
+        color: var(--text2);
+        font-family: var(--font);
+        outline: none;
+        resize: vertical;
+        min-height: 56px;
+        transition: border-color 0.15s;
+        line-height: 1.5;
+      }
+      .sys-textarea:focus {
+        border-color: var(--accent);
+      }
+
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+        margin-bottom: 1rem;
+      }
+      .stat {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px 14px;
+      }
+      .stat-label {
+        font-size: 11px;
+        color: var(--text3);
+        margin-bottom: 4px;
+        font-family: var(--mono);
+      }
+      .stat-value {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .stat-sub {
+        font-size: 11px;
+        color: var(--text3);
+        margin-top: 2px;
+      }
+
+      .chat-window {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        min-height: 300px;
+        max-height: 460px;
+        overflow-y: auto;
+        padding: 1.25rem;
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .chat-empty {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: var(--text3);
+        text-align: center;
+        gap: 8px;
+        padding: 2rem;
+      }
+      .msg {
+        display: flex;
+        gap: 10px;
+        max-width: 92%;
+      }
+      .msg.user {
+        margin-left: auto;
+        flex-direction: row-reverse;
+      }
+      .msg-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 600;
+        flex-shrink: 0;
+      }
+      .msg.user .msg-avatar {
+        background: var(--accent2);
+        color: #fff;
+      }
+      .msg.assistant .msg-avatar {
+        background: var(--bg3);
+        color: var(--text2);
+        border: 1px solid var(--border2);
+      }
+      .msg-body {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .msg-bubble {
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-size: 14px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .msg.user .msg-bubble {
+        background: var(--accent2);
+        color: #fff;
+        border-bottom-right-radius: 4px;
+      }
+      .msg.assistant .msg-bubble {
+        background: var(--bg3);
+        color: var(--text);
+        border-bottom-left-radius: 4px;
+        border: 1px solid var(--border);
+      }
+      .msg-meta {
+        font-size: 11px;
+        color: var(--text3);
+        font-family: var(--mono);
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .msg.user .msg-meta {
+        justify-content: flex-end;
+      }
+      .token-pill {
+        padding: 1px 7px;
+        border-radius: 100px;
+        font-size: 10px;
+      }
+      .pill-in {
+        background: var(--blue-bg);
+        color: var(--blue);
+      }
+      .pill-out {
+        background: var(--amber-bg);
+        color: var(--amber);
+      }
+      .pill-cost {
+        background: var(--green-bg);
+        color: var(--green);
+      }
+
+      .typing-indicator {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 12px 14px;
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        border-bottom-left-radius: 4px;
+        width: fit-content;
+      }
+      .typing-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--text3);
+        border-radius: 50%;
+        animation: blink 1.4s infinite;
+      }
+      .typing-dot:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .typing-dot:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+      @keyframes blink {
+        0%,
+        80%,
+        100% {
+          opacity: 0.2;
+        }
+        40% {
+          opacity: 1;
+        }
+      }
+
+      .input-area {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+      }
+      .input-top {
+        display: flex;
+        align-items: flex-end;
+      }
+      .msg-input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        padding: 14px 16px;
+        font-size: 14px;
+        color: var(--text);
+        font-family: var(--font);
+        outline: none;
+        resize: none;
+        min-height: 52px;
+        max-height: 160px;
+        line-height: 1.5;
+      }
+      .msg-input::placeholder {
+        color: var(--text3);
+      }
+      .send-btn {
+        padding: 10px 18px;
+        margin: 8px 8px 8px 0;
+        background: var(--accent2);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius);
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        font-family: var(--font);
+        transition: all 0.15s;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .send-btn:hover {
+        background: #6d28d9;
+      }
+      .send-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      .input-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 14px;
+        border-top: 1px solid var(--border);
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .token-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .token-counter {
+        font-size: 11px;
+        font-family: var(--mono);
+        color: var(--text3);
+      }
+      .pro-hint {
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 100px;
+        display: none;
+      }
+      .pro-hint.light {
+        display: inline-block;
+        background: var(--green-bg);
+        color: var(--green);
+      }
+      .pro-hint.medium {
+        display: inline-block;
+        background: var(--amber-bg);
+        color: var(--amber);
+      }
+      .pro-hint.heavy {
+        display: inline-block;
+        background: var(--red-bg);
+        color: var(--red);
+      }
+      .clear-btn {
+        font-size: 12px;
+        color: var(--text3);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-family: var(--font);
+        padding: 2px 6px;
+        border-radius: 4px;
+        transition: all 0.15s;
+      }
+      .clear-btn:hover {
+        color: var(--red);
+        background: var(--red-bg);
+      }
+
+      .history-warning {
+        display: none;
+        background: var(--amber-bg);
+        border: 1px solid rgba(251, 191, 36, 0.2);
+        border-radius: var(--radius);
+        padding: 8px 12px;
+        font-size: 12px;
+        color: var(--amber);
+        margin-bottom: 8px;
+        line-height: 1.5;
+      }
+      .history-warning.show {
+        display: block;
+      }
+
+      .error-msg {
+        background: var(--red-bg);
+        border: 1px solid rgba(248, 113, 113, 0.25);
+        color: var(--red);
+        border-radius: var(--radius);
+        padding: 10px 14px;
+        font-size: 13px;
+        margin-bottom: 10px;
+      }
+
+      .pricing-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      .pricing-table th {
+        text-align: left;
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text3);
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .pricing-table td {
+        padding: 12px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+      }
+      .pricing-table tr:last-child td {
+        border-bottom: none;
+      }
+      .pricing-table tr:hover td {
+        background: var(--bg3);
+      }
+      .model-tag {
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 100px;
+        margin-left: 6px;
+      }
+      .tag-cheap {
+        background: var(--green-bg);
+        color: var(--green);
+      }
+      .tag-best {
+        background: var(--amber-bg);
+        color: var(--amber);
+      }
+      .tag-power {
+        background: var(--blue-bg);
+        color: var(--blue);
+      }
+
+      .compare-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 1.5rem;
+      }
+      .compare-card {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 1.25rem;
+      }
+      .compare-card.featured {
+        border-color: rgba(167, 139, 250, 0.35);
+      }
+      .compare-badge {
+        display: inline-block;
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 100px;
+        margin-bottom: 10px;
+      }
+      .compare-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .compare-price {
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--accent);
+        margin-bottom: 14px;
+      }
+      .compare-price small {
+        font-size: 13px;
+        color: var(--text3);
+        font-weight: 400;
+      }
+      .compare-item {
+        font-size: 13px;
+        color: var(--text2);
+        padding: 5px 0;
+        display: flex;
+        gap: 8px;
+        border-bottom: 1px solid var(--border);
+        line-height: 1.4;
+      }
+      .compare-item:last-child {
+        border-bottom: none;
+      }
+
+      .calc-inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-bottom: 1.5rem;
+      }
+      .calc-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .calc-label {
+        font-size: 13px;
+        color: var(--text2);
+        min-width: 140px;
+        flex-shrink: 0;
+      }
+      .calc-slider {
+        flex: 1;
+        accent-color: var(--accent);
+        cursor: pointer;
+      }
+      .calc-val {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        min-width: 60px;
+        text-align: right;
+        font-family: var(--mono);
+      }
+      .calc-model {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .calc-model-btn {
+        padding: 7px 14px;
+        border-radius: var(--radius);
+        font-size: 13px;
+        border: 1px solid var(--border2);
+        background: var(--bg3);
+        color: var(--text2);
+        cursor: pointer;
+        transition: all 0.15s;
+        font-family: var(--font);
+      }
+      .calc-model-btn.active {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: rgba(167, 139, 250, 0.1);
+      }
+      .calc-results {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+      .calc-stat {
+        background: var(--bg3);
+        border-radius: var(--radius);
+        padding: 14px;
+        text-align: center;
+      }
+      .calc-stat-label {
+        font-size: 11px;
+        color: var(--text3);
+        margin-bottom: 6px;
+      }
+      .calc-stat-value {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .verdict {
+        margin-top: 14px;
+        padding: 12px 16px;
+        border-radius: var(--radius);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .verdict.good {
+        background: var(--green-bg);
+        color: var(--green);
+        border: 1px solid rgba(52, 211, 153, 0.2);
+      }
+      .verdict.mid {
+        background: var(--amber-bg);
+        color: var(--amber);
+        border: 1px solid rgba(251, 191, 36, 0.2);
+      }
+      .verdict.high {
+        background: var(--red-bg);
+        color: var(--red);
+        border: 1px solid rgba(248, 113, 113, 0.2);
+      }
+
+      .tip {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent);
+        border-radius: 0 var(--radius) var(--radius) 0;
+        padding: 12px 16px;
+        margin-bottom: 10px;
+      }
+      .tip-title {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+      .tip-body {
+        font-size: 13px;
+        color: var(--text2);
+        line-height: 1.6;
+      }
+      .tip-num {
+        display: inline-block;
+        width: 22px;
+        height: 22px;
+        background: rgba(167, 139, 250, 0.15);
+        color: var(--accent);
+        border-radius: 50%;
+        text-align: center;
+        line-height: 22px;
+        font-size: 11px;
+        font-weight: 600;
+        margin-right: 6px;
+      }
+
+      .steps {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .step {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+      }
+      .step-num {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(167, 139, 250, 0.15);
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 600;
+        flex-shrink: 0;
+      }
+      .step-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text);
+        margin-bottom: 3px;
+      }
+      .step-desc {
+        font-size: 13px;
+        color: var(--text2);
+        line-height: 1.5;
+      }
+      .step-desc a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .step-desc a:hover {
+        text-decoration: underline;
+      }
+
+      .token-demo {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin: 1rem 0;
+      }
+      .token-box {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px;
+      }
+      .token-box-label {
+        font-size: 11px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 8px;
+      }
+      .token-box-label.light {
+        color: var(--green);
+      }
+      .token-box-label.heavy {
+        color: var(--red);
+      }
+      .token-box-text {
+        font-size: 12px;
+        color: var(--text2);
+        line-height: 1.5;
+        margin-bottom: 10px;
+        font-family: var(--mono);
+        border-left: 2px solid var(--border2);
+        padding-left: 10px;
+      }
+      .token-count {
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .token-count.light {
+        color: var(--green);
+      }
+      .token-count.heavy {
+        color: var(--red);
+      }
+
+      .sec-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        letter-spacing: -0.01em;
+      }
+      .sec-sub {
+        font-size: 14px;
+        color: var(--text2);
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+      }
+
+      /* GLASSMORPHISM BUILT BY */
+      .built-by {
+        position: relative;
+        margin-top: 3rem;
+        padding: 1.5rem;
+        border-radius: var(--radius-lg);
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow:
+          0 0 40px rgba(124, 58, 237, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        overflow: hidden;
+      }
+      .built-by::before {
+        content: "";
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 180px;
+        height: 180px;
+        background: radial-gradient(
+          circle,
+          rgba(124, 58, 237, 0.15) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .built-by-label {
+        font-size: 11px;
+        color: var(--text3);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 12px;
+      }
+      .built-by-inner {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .built-by-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent2), #4f46e5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+        border: 2px solid rgba(167, 139, 250, 0.3);
+      }
+      .built-by-info {
+        flex: 1;
+        min-width: 160px;
+      }
+      .built-by-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 2px;
+      }
+      .built-by-role {
+        font-size: 13px;
+        color: var(--text2);
+        margin-bottom: 8px;
+        line-height: 1.4;
+      }
+      .built-by-links {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .built-by-link {
+        font-size: 12px;
+        padding: 4px 10px;
+        border-radius: 100px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text2);
+        text-decoration: none;
+        transition: all 0.15s;
+        white-space: nowrap;
+      }
+      .built-by-link:hover {
+        color: var(--accent);
+        border-color: rgba(167, 139, 250, 0.4);
+        background: rgba(167, 139, 250, 0.08);
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--bg3);
+        border-radius: 3px;
+      }
+
+      @media (max-width: 600px) {
+        nav {
+          padding: 0 1rem;
+        }
+        .nav-tab {
+          padding: 6px 9px;
+          font-size: 12px;
+        }
+        main {
+          padding: 1.25rem 1rem 3rem;
+        }
+        .compare-grid {
+          grid-template-columns: 1fr;
+        }
+        .token-demo {
+          grid-template-columns: 1fr;
+        }
+        .calc-results {
+          grid-template-columns: 1fr 1fr;
+        }
+        .hero h1 {
+          font-size: 1.7rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-brand"><span>⚡</span> Claude Token Explorer</div>
+      <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showSection('chat', this)">
+          Chat
+        </button>
+        <button class="nav-tab" onclick="showSection('pricing', this)">
+          Pricing
+        </button>
+        <button class="nav-tab" onclick="showSection('compare', this)">
+          Pro vs API
+        </button>
+        <button class="nav-tab" onclick="showSection('learn', this)">
+          Learn
+        </button>
+      </div>
+    </nav>
+
+    <main>
+      <!-- CHAT -->
+      <div id="chat" class="section active">
+        <div class="hero">
+          <div class="hero-eyebrow">Free · No signup · Open source</div>
+          <h1>See exactly what Claude <em>costs</em> per message</h1>
+          <p>
+            Chat with Claude and watch your token usage in real time. Useful for
+            API users and Claude Pro ($20/month) subscribers alike.
+          </p>
+          <div class="trust">
+            <div class="trust-item">
+              <div class="trust-dot"></div>
+              Your API key stays in your browser only
+            </div>
+            <div class="trust-item">
+              <div class="trust-dot"></div>
+              We never store or transmit your key
+            </div>
+            <div class="trust-item">
+              <div class="trust-dot"></div>
+              Calls go directly from you to Anthropic
+            </div>
+          </div>
+        </div>
+
+        <div class="key-setup">
+          <div class="key-header">
+            <div class="key-label">🔑 Anthropic API key</div>
+            <span class="key-badge" id="key-status">Not connected</span>
+          </div>
+          <div class="key-input-row">
+            <input
+              type="password"
+              class="key-input"
+              id="api-key"
+              placeholder="sk-ant-api03-..."
+              oninput="handleKeyInput()"
+              autocomplete="off"
+            />
+            <button
+              class="btn btn-ghost"
+              onclick="toggleKeyVisibility()"
+              id="toggle-key"
+              style="padding: 10px 14px; white-space: nowrap"
+            >
+              Show
+            </button>
+            <button
+              class="btn btn-primary"
+              onclick="saveKey()"
+              style="padding: 10px 16px; white-space: nowrap"
+            >
+              Save
+            </button>
+          </div>
+          <div class="key-note">
+            No key?
+            <a
+              href="https://console.anthropic.com"
+              target="_blank"
+              rel="noopener"
+              >Get one at console.anthropic.com</a
+            >
+            — top up $5 to start. Key saved in your browser's localStorage only.
+            Never sent to any server except Anthropic's directly.
+            <a
+              href="#"
+              onclick="
+                showSection('learn', null);
+                return false;
+              "
+              >How to get a key →</a
+            >
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Model</div>
+          <div class="model-row">
+            <button
+              class="model-btn"
+              onclick="selectModel('claude-haiku-4-5-20251001', this)"
+            >
+              Haiku 4.5 — cheapest
+            </button>
+            <button
+              class="model-btn active"
+              onclick="selectModel('claude-sonnet-4-6', this)"
+            >
+              Sonnet 4.6 — balanced
+            </button>
+            <button
+              class="model-btn"
+              onclick="selectModel('claude-opus-4-6', this)"
+            >
+              Opus 4.6 — powerful
+            </button>
+          </div>
+          <div class="model-info" id="model-info">
+            Sonnet 4.6 · $3.00 input / $15.00 output per million tokens
+          </div>
+          <div class="sys-label">
+            System prompt
+            <span>Pre-filled to keep replies short and cheap</span>
+          </div>
+          <textarea class="sys-textarea" id="sys-prompt">
+Be concise. Answer directly. No filler, no restating my question.</textarea
+          >
+        </div>
+
+        <div class="stats-row">
+          <div class="stat">
+            <div class="stat-label">Input tokens</div>
+            <div class="stat-value" id="stat-input">0</div>
+            <div class="stat-sub">this session</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Output tokens</div>
+            <div class="stat-value" id="stat-output">0</div>
+            <div class="stat-sub">this session</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Total cost</div>
+            <div class="stat-value" id="stat-cost">$0.0000</div>
+            <div class="stat-sub">this session</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Messages</div>
+            <div class="stat-value" id="stat-msgs">0</div>
+            <div class="stat-sub">exchanged</div>
+          </div>
+        </div>
+
+        <div class="history-warning" id="history-warning">
+          ⚠️ Long conversation — your history is now
+          <span id="history-count">0</span> messages. Every new reply re-reads
+          all of it as input. On Claude Pro, this is burning your daily limit
+          faster. Consider starting a new chat for a new topic.
+        </div>
+
+        <div class="chat-window" id="chat-window">
+          <div class="chat-empty" id="chat-empty">
+            <div style="font-size: 32px; opacity: 0.3">💬</div>
+            <div style="font-size: 14px; color: var(--text3)">
+              Enter your API key above and start chatting
+            </div>
+            <div style="font-size: 12px; color: var(--text3)">
+              Every message shows exact token counts and live cost
+            </div>
+          </div>
+        </div>
+
+        <div id="error-box" class="error-msg" style="display: none"></div>
+
+        <div class="input-area">
+          <div class="input-top">
+            <textarea
+              class="msg-input"
+              id="msg-input"
+              placeholder="Type a message... (Shift+Enter for new line)"
+              rows="1"
+              onkeydown="handleKeydown(event)"
+              oninput="updateTokenCounter()"
+            ></textarea>
+            <button class="send-btn" id="send-btn" onclick="sendMessage()">
+              Send →
+            </button>
+          </div>
+          <div class="input-footer">
+            <div class="token-indicator">
+              <span class="token-counter" id="token-counter">~0 tokens</span>
+              <span class="pro-hint" id="pro-hint"></span>
+            </div>
+            <button class="clear-btn" onclick="clearChat()">Clear chat</button>
+          </div>
+        </div>
+
+        <!-- BUILT BY -->
+        <div class="built-by">
+          <div class="built-by-label">Built by</div>
+          <div class="built-by-inner">
+            <div class="built-by-avatar">AS</div>
+            <div class="built-by-info">
+              <div class="built-by-name">Ahaan Soni</div>
+              <div class="built-by-role">
+                Associate Staff Engineer · Backend systems, distributed
+                architecture, and building things in public.
+              </div>
+              <div class="built-by-links">
+                <a
+                  class="built-by-link"
+                  href="https://ahaansoni.github.io"
+                  target="_blank"
+                  rel="noopener"
+                  >🌐 Portfolio</a
+                >
+                <a
+                  class="built-by-link"
+                  href="https://linkedin.com/in/ahaansoni"
+                  target="_blank"
+                  rel="noopener"
+                  >in LinkedIn</a
+                >
+                <a
+                  class="built-by-link"
+                  href="https://github.com/ahaansoni"
+                  target="_blank"
+                  rel="noopener"
+                  >⌥ GitHub</a
+                >
+                <a
+                  class="built-by-link"
+                  href="https://www.youtube.com/@TorqueDecoded"
+                  target="_blank"
+                  rel="noopener"
+                  >▶ Torque Decoded</a
+                >
+                <a
+                  class="built-by-link"
+                  href="https://buymeacoffee.com/ahaaan"
+                  target="_blank"
+                  rel="noopener"
+                  >☕ Buy me a coffee</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRICING -->
+      <div id="pricing" class="section">
+        <div style="padding: 2rem 0 1.5rem">
+          <div class="sec-title">Current Claude API pricing</div>
+          <div class="sec-sub">
+            Prices as of June 2026. API billing is separate from Claude.ai Pro
+            subscription.
+          </div>
+        </div>
+        <div class="card">
+          <table class="pricing-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Input / 1M tokens</th>
+                <th>Output / 1M tokens</th>
+                <th>Best for</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong>Haiku 4.5</strong
+                  ><span class="model-tag tag-cheap">cheapest</span>
+                </td>
+                <td style="font-family: var(--mono); color: var(--green)">
+                  $1.00
+                </td>
+                <td style="font-family: var(--mono); color: var(--green)">
+                  $5.00
+                </td>
+                <td style="color: var(--text2); font-size: 13px">
+                  Summaries, Q&A, classification
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Sonnet 4.6</strong
+                  ><span class="model-tag tag-best">balanced</span>
+                </td>
+                <td style="font-family: var(--mono); color: var(--amber)">
+                  $3.00
+                </td>
+                <td style="font-family: var(--mono); color: var(--amber)">
+                  $15.00
+                </td>
+                <td style="color: var(--text2); font-size: 13px">
+                  Most use cases, coding, analysis
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Opus 4.8</strong
+                  ><span class="model-tag tag-power">powerful</span>
+                </td>
+                <td style="font-family: var(--mono); color: var(--blue)">
+                  $5.00
+                </td>
+                <td style="font-family: var(--mono); color: var(--blue)">
+                  $25.00
+                </td>
+                <td style="color: var(--text2); font-size: 13px">
+                  Complex reasoning, hard problems
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tip">
+          <div class="tip-title">Output costs 5× more than input</div>
+          <div class="tip-body">
+            Every word Claude writes costs far more than every word you type.
+            Asking for shorter replies is your biggest cost lever.
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-title">Batch API = 50% off</div>
+          <div class="tip-body">
+            Processing many items at once? Anthropic's Batch API halves your
+            cost across all models.
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-title">
+            Prompt caching = up to 90% off repeated input
+          </div>
+          <div class="tip-body">
+            If your system prompt is the same across calls, prompt caching
+            slashes that repeated input cost dramatically.
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-title">How far does $20 go?</div>
+          <div class="tip-body">
+            On Sonnet 4.6 with realistic mixed usage, $20 covers roughly 2–3
+            million tokens — thousands of normal conversations.
+          </div>
+        </div>
+        <div class="built-by" style="margin-top: 2rem">
+          <div class="built-by-label">Built by</div>
+          <div class="built-by-inner">
+            <div class="built-by-avatar">AS</div>
+            <div class="built-by-info">
+              <div class="built-by-name">Ahaan Soni</div>
+              <div class="built-by-role">
+                Backend engineer · distributed systems · building in public
+              </div>
+              <div class="built-by-links">
+                <a
+                  class="built-by-link"
+                  href="https://ahaansoni.github.io"
+                  target="_blank"
+                  rel="noopener"
+                  >🌐 Portfolio</a
+                >
+                <a
+                  class="built-by-link"
+                  href="https://linkedin.com/in/ahaansoni"
+                  target="_blank"
+                  rel="noopener"
+                  >in LinkedIn</a
+                >
+                <a
+                  class="built-by-link"
+                  href="https://github.com/ahaansoni"
+                  target="_blank"
+                  rel="noopener"
+                  >⌥ GitHub</a
+                >
+                <a
+                  class="built-by-link"
+                  href="https://buymeacoffee.com/ahaaan"
+                  target="_blank"
+                  rel="noopener"
+                  >☕ Coffee</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPARE -->
+      <div id="compare" class="section">
+        <div style="padding: 2rem 0 1.5rem">
+          <div class="sec-title">Claude Pro vs API credits</div>
+          <div class="sec-sub">
+            Two completely separate products. Different billing, features, and
+            use cases. You can use both simultaneously.
+          </div>
+        </div>
+        <div class="compare-grid">
+          <div class="compare-card featured">
+            <span
+              class="compare-badge"
+              style="background: rgba(167, 139, 250, 0.1); color: var(--accent)"
+              >flat monthly fee</span
+            >
+            <div class="compare-title">Claude Pro</div>
+            <div class="compare-price">$20 <small>/month</small></div>
+            <div class="compare-item">
+              <span style="color: var(--green)">✓</span> Chat on claude.ai —
+              website & app
+            </div>
+            <div class="compare-item">
+              <span style="color: var(--green)">✓</span> Projects, memory,
+              artifacts
+            </div>
+            <div class="compare-item">
+              <span style="color: var(--green)">✓</span> File, image & PDF
+              uploads
+            </div>
+            <div class="compare-item">
+              <span style="color: var(--green)">✓</span> Best for casual to
+              daily users
+            </div>
+            <div class="compare-item">
+              <span style="color: var(--red)">✗</span> Daily message caps
+              (size-weighted)
+            </div>
+            <div class="compare-item">
+              <span style="color: var(--red)">✗</span> Zero per-message token
+              visibility
+            </div>
+            <div class="compare-item">
+              <span style="color: var(--red)">✗</span> Credits don't roll over
+            </div>
+            <div class="compare-item">
+              <span style="color: var(--red)">✗</span> Can't build apps or
+              automate
+            </div>
+          </div>
+          <div class="compare-card">
+            <span
+              class="compare-badge"
+              style="background: var(--green-bg); color: var(--green)"
+              >pay per use</span
+            >
+            <div class="compare-title">API Credits</div>
+            <div class="compare-price">$5+ <small>prepaid</small></div>
+            <div class="compare-item">
+              <span style="color: var(--green)">✓</span> Full per-message token
+              visibility
+            </div>
+            <div class="compare-item">
+              <span style="color: var(--green)">✓</span> Build custom apps &
+              automations
+            </div>
+            <div class="compare-item">
+              <span style="color: var(--green)">✓</span> No message limits
+            </div>
+            <div class="compare-item">
+              <span style="color: var(--green)">✓</span> Credits never expire
+            </div>
+            <div class="compare-item">
+              <span style="color: var(--red)">✗</span> No claude.ai features
+              (projects, memory)
+            </div>
+            <div class="compare-item">
+              <span style="color: var(--red)">✗</span> Requires setup to use
+            </div>
+            <div class="compare-item">
+              <span style="color: var(--red)">✗</span> Heavy use = higher bill
+            </div>
+            <div class="compare-item">
+              <span style="color: var(--red)">✗</span> No conversation history
+              saved
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Cost calculator — which plan suits you?</div>
+          <div class="calc-inputs">
+            <div>
+              <div
+                style="font-size: 12px; color: var(--text3); margin-bottom: 8px"
+              >
+                Model
+              </div>
+              <div class="calc-model">
+                <button
+                  class="calc-model-btn"
+                  onclick="calcSelect('haiku', this)"
+                >
+                  Haiku 4.5
+                </button>
+                <button
+                  class="calc-model-btn active"
+                  onclick="calcSelect('sonnet', this)"
+                >
+                  Sonnet 4.6
+                </button>
+                <button
+                  class="calc-model-btn"
+                  onclick="calcSelect('opus', this)"
+                >
+                  Opus 4.8
+                </button>
+              </div>
+            </div>
+            <div class="calc-row">
+              <span class="calc-label">Messages per day</span
+              ><input
+                type="range"
+                class="calc-slider"
+                min="1"
+                max="200"
+                value="20"
+                step="1"
+                id="c-msgs"
+                oninput="calcUpdate()"
+              /><span class="calc-val" id="c-msgs-v">20</span>
+            </div>
+            <div class="calc-row">
+              <span class="calc-label">Avg input tokens</span
+              ><input
+                type="range"
+                class="calc-slider"
+                min="50"
+                max="5000"
+                value="300"
+                step="50"
+                id="c-inp"
+                oninput="calcUpdate()"
+              /><span class="calc-val" id="c-inp-v">300</span>
+            </div>
+            <div class="calc-row">
+              <span class="calc-label">Avg output tokens</span
+              ><input
+                type="range"
+                class="calc-slider"
+                min="50"
+                max="2000"
+                value="400"
+                step="50"
+                id="c-out"
+                oninput="calcUpdate()"
+              /><span class="calc-val" id="c-out-v">400</span>
+            </div>
+          </div>
+          <div class="calc-results">
+            <div class="calc-stat">
+              <div class="calc-stat-label">Cost per message</div>
+              <div class="calc-stat-value" id="c-permsg">$0.00</div>
+            </div>
+            <div class="calc-stat">
+              <div class="calc-stat-label">Monthly cost</div>
+              <div class="calc-stat-value" id="c-monthly">$0.00</div>
+            </div>
+            <div class="calc-stat">
+              <div class="calc-stat-label">$20 lasts</div>
+              <div class="calc-stat-value" id="c-days">—</div>
+            </div>
+          </div>
+          <div id="c-verdict" class="verdict good"></div>
+        </div>
+      </div>
+
+      <!-- LEARN -->
+      <div id="learn" class="section">
+        <div style="padding: 2rem 0 1.5rem">
+          <div class="sec-title">How to get your API key</div>
+          <div class="sec-sub">
+            Takes about 2 minutes. No coding knowledge needed.
+          </div>
+        </div>
+        <div class="card" style="margin-bottom: 2rem">
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div>
+                <div class="step-title">Go to console.anthropic.com</div>
+                <div class="step-desc">
+                  Visit
+                  <a
+                    href="https://console.anthropic.com"
+                    target="_blank"
+                    rel="noopener"
+                    >console.anthropic.com</a
+                  >
+                  and sign up or log in. This is Anthropic's developer portal —
+                  separate from claude.ai.
+                </div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div>
+                <div class="step-title">Add credits (minimum $5)</div>
+                <div class="step-desc">
+                  Go to Billing → Add credits. Start with $5. Credits are
+                  prepaid and never expire. No subscription needed.
+                </div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <div>
+                <div class="step-title">Create an API key</div>
+                <div class="step-desc">
+                  Click "API Keys" in the sidebar → "Create Key". Give it a
+                  name. Copy the key — it starts with
+                  <code
+                    style="
+                      font-family: var(--mono);
+                      font-size: 12px;
+                      color: var(--accent);
+                    "
+                    >sk-ant-</code
+                  >.
+                </div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">4</div>
+              <div>
+                <div class="step-title">Paste it in the Chat tab and save</div>
+                <div class="step-desc">
+                  Paste your key, click Save. Stored in your browser only —
+                  never sent to any server other than Anthropic directly.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1.5rem">
+          <div class="sec-title">What is a token?</div>
+          <div class="sec-sub">
+            Claude doesn't read words — it reads chunks called tokens.
+            Understanding tokens is key to understanding costs.
+          </div>
+        </div>
+        <div class="card" style="margin-bottom: 1rem">
+          <div class="card-title">Quick reference</div>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+              gap: 10px;
+            "
+          >
+            <div
+              style="
+                background: var(--bg3);
+                border-radius: var(--radius);
+                padding: 12px;
+                text-align: center;
+              "
+            >
+              <div
+                style="font-size: 11px; color: var(--text3); margin-bottom: 4px"
+              >
+                ~4 characters
+              </div>
+              <div style="font-size: 18px; font-weight: 600">1 token</div>
+            </div>
+            <div
+              style="
+                background: var(--bg3);
+                border-radius: var(--radius);
+                padding: 12px;
+                text-align: center;
+              "
+            >
+              <div
+                style="font-size: 11px; color: var(--text3); margin-bottom: 4px"
+              >
+                ~¾ of a word
+              </div>
+              <div style="font-size: 18px; font-weight: 600">1 token</div>
+            </div>
+            <div
+              style="
+                background: var(--bg3);
+                border-radius: var(--radius);
+                padding: 12px;
+                text-align: center;
+              "
+            >
+              <div
+                style="font-size: 11px; color: var(--text3); margin-bottom: 4px"
+              >
+                1 page of text
+              </div>
+              <div style="font-size: 18px; font-weight: 600">~750 tokens</div>
+            </div>
+            <div
+              style="
+                background: var(--bg3);
+                border-radius: var(--radius);
+                padding: 12px;
+                text-align: center;
+              "
+            >
+              <div
+                style="font-size: 11px; color: var(--text3); margin-bottom: 4px"
+              >
+                context window
+              </div>
+              <div style="font-size: 18px; font-weight: 600">200K max</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 1.5rem">
+          <div class="card-title">Heavy vs light prompt — real difference</div>
+          <div class="token-demo">
+            <div class="token-box">
+              <div class="token-box-label light">✓ Light — efficient</div>
+              <div class="token-box-text">"Summarize in 3 bullets: [text]"</div>
+              <div class="token-count light">~12 tokens</div>
+              <div
+                style="font-size: 11px; color: var(--text3); margin-top: 4px"
+              >
+                for the prompt itself
+              </div>
+            </div>
+            <div class="token-box">
+              <div class="token-box-label heavy">✗ Heavy — wasteful</div>
+              <div class="token-box-text">
+                "Hey! Hope you're well. Could you please, if you don't mind,
+                maybe summarize this? Thanks so much!"
+              </div>
+              <div class="token-count heavy">~38 tokens</div>
+              <div
+                style="font-size: 11px; color: var(--text3); margin-top: 4px"
+              >
+                3× more, zero extra value
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              margin-top: 12px;
+              padding: 12px;
+              background: var(--bg3);
+              border-radius: var(--radius);
+              font-size: 13px;
+              color: var(--text2);
+              line-height: 1.6;
+            "
+          >
+            <strong style="color: var(--text)"
+              >The history trap (affects Pro users too):</strong
+            >
+            Every new message re-reads your full conversation history. Message
+            20 sends all 19 previous messages + your new one as input every
+            time. This is why Pro users hit daily limits after long sessions.
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1.5rem">
+          <div class="sec-title">8 tips to save tokens</div>
+          <div class="sec-sub">
+            Works for both API users and Claude Pro $20/month subscribers.
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-title">
+            <span class="tip-num">1</span>Ask for shorter output explicitly
+          </div>
+          <div class="tip-body">
+            "In 2 sentences", "3 bullets only" — output costs 5× more than
+            input. Biggest single saving.
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-title">
+            <span class="tip-num">2</span>Use Haiku for simple tasks
+          </div>
+          <div class="tip-body">
+            Summarizing, classifying, formatting? Haiku 4.5 is 3× cheaper than
+            Sonnet. Save Sonnet for complex reasoning.
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-title">
+            <span class="tip-num">3</span>Start a new chat for new topics
+          </div>
+          <div class="tip-body">
+            Every reply re-reads full conversation history. New topic = fresh
+            chat. Saves tokens and resets your Pro daily weight.
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-title">
+            <span class="tip-num">4</span>Keep your system prompt short
+          </div>
+          <div class="tip-body">
+            Sent with every single message. Cutting one sentence saves thousands
+            of tokens over a session.
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-title">
+            <span class="tip-num">5</span>Batch your questions
+          </div>
+          <div class="tip-body">
+            One message with 5 questions is far cheaper than 5 separate
+            messages. Less history compounding.
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-title">
+            <span class="tip-num">6</span>Paste only what's needed
+          </div>
+          <div class="tip-body">
+            Uploading a 50-page doc when you need page 3? Paste just the
+            relevant section.
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-title">
+            <span class="tip-num">7</span>Use structured prompts
+          </div>
+          <div class="tip-body">
+            Format: Context: [...]. Task: [...]. Format: [...]. Less ambiguity =
+            fewer back-and-forth turns.
+          </div>
+        </div>
+        <div class="tip">
+          <div class="tip-title">
+            <span class="tip-num">8</span>Skip the pleasantries
+          </div>
+          <div class="tip-body">
+            "Please", "thank you", "could you kindly" — adds tokens with zero
+            benefit to output quality.
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const MODELS = {
+        "claude-haiku-4-5-20251001": {
+          name: "Haiku 4.5",
+          input: 1.0,
+          output: 5.0,
+        },
+        "claude-sonnet-4-6": { name: "Sonnet 4.6", input: 3.0, output: 15.0 },
+        "claude-opus-4-6": { name: "Opus 4.6", input: 5.0, output: 25.0 },
+      };
+      const CALC_MODELS = {
+        haiku: { input: 1, output: 5 },
+        sonnet: { input: 3, output: 15 },
+        opus: { input: 5, output: 25 },
+      };
+
+      let currentModel = "claude-sonnet-4-6";
+      let calcModel = "sonnet";
+      let sessionInput = 0,
+        sessionOutput = 0,
+        sessionCost = 0,
+        sessionMsgs = 0;
+      let history = [];
+      let isLoading = false;
+
+      function showSection(id, el) {
+        document
+          .querySelectorAll(".section")
+          .forEach((s) => s.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-tab")
+          .forEach((t) => t.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+        if (el) el.classList.add("active");
+        else {
+          document.querySelectorAll(".nav-tab").forEach((t) => {
+            if (t.textContent.trim().toLowerCase() === id)
+              t.classList.add("active");
+          });
+        }
+      }
+
+      function handleKeyInput() {
+        const val = document.getElementById("api-key").value.trim();
+        const s = document.getElementById("key-status");
+        if (val.startsWith("sk-ant-") && val.length > 20) {
+          s.textContent = "Key looks valid";
+          s.style.background = "var(--green-bg)";
+          s.style.color = "var(--green)";
+          s.style.borderColor = "rgba(52,211,153,0.2)";
+        } else {
+          s.textContent = "Not connected";
+          s.style.background = "";
+          s.style.color = "";
+          s.style.borderColor = "";
+        }
+      }
+
+      function saveKey() {
+        const val = document.getElementById("api-key").value.trim();
+        if (!val) {
+          showError("Please enter your API key.");
+          return;
+        }
+        if (!val.startsWith("sk-ant-")) {
+          showError("Key should start with sk-ant-");
+          return;
+        }
+        localStorage.setItem("claude_api_key", val);
+        const s = document.getElementById("key-status");
+        s.textContent = "✓ Saved";
+        s.style.background = "var(--green-bg)";
+        s.style.color = "var(--green)";
+        s.style.borderColor = "rgba(52,211,153,0.2)";
+        hideError();
+      }
+
+      function toggleKeyVisibility() {
+        const inp = document.getElementById("api-key"),
+          btn = document.getElementById("toggle-key");
+        inp.type = inp.type === "password" ? "text" : "password";
+        btn.textContent = inp.type === "password" ? "Show" : "Hide";
+      }
+
+      function selectModel(id, el) {
+        currentModel = id;
+        document
+          .querySelectorAll(".model-btn")
+          .forEach((b) => b.classList.remove("active"));
+        el.classList.add("active");
+        const m = MODELS[id];
+        document.getElementById("model-info").textContent =
+          `${m.name} · $${m.input.toFixed(2)} input / $${m.output.toFixed(2)} output per million tokens`;
+      }
+
+      function estimateTokens(text) {
+        return Math.ceil(text.length / 4);
+      }
+
+      function updateTokenCounter() {
+        const text = document.getElementById("msg-input").value;
+        const est = estimateTokens(text);
+        const el = document.getElementById("token-counter");
+        const hint = document.getElementById("pro-hint");
+        el.textContent = `~${est} tokens`;
+
+        if (est === 0) {
+          hint.className = "pro-hint";
+          hint.textContent = "";
+        } else if (est < 200) {
+          hint.className = "pro-hint light";
+          hint.textContent = "🟢 Light — low Pro limit burn";
+        } else if (est < 800) {
+          hint.className = "pro-hint medium";
+          hint.textContent = "🟡 Medium — moderate Pro limit burn";
+        } else {
+          hint.className = "pro-hint heavy";
+          hint.textContent = "🔴 Heavy — high Pro limit burn";
+        }
+      }
+
+      function handleKeydown(e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      }
+
+      function showError(msg) {
+        const el = document.getElementById("error-box");
+        el.textContent = msg;
+        el.style.display = "block";
+      }
+      function hideError() {
+        document.getElementById("error-box").style.display = "none";
+      }
+
+      function addMessage(role, content, meta) {
+        const cw = document.getElementById("chat-window");
+        const empty = document.getElementById("chat-empty");
+        if (empty) empty.remove();
+
+        const msg = document.createElement("div");
+        msg.className = `msg ${role}`;
+        const initials = role === "user" ? "You" : "AI";
+        let metaHtml = "";
+        if (meta) {
+          metaHtml = `<div class="msg-meta">
+      <span class="token-pill pill-in">↑ ${meta.input_tokens} in</span>
+      <span class="token-pill pill-out">↓ ${meta.output_tokens} out</span>
+      <span class="token-pill pill-cost">$${meta.cost.toFixed(6)}</span>
+    </div>`;
+        }
+        msg.innerHTML = `<div class="msg-avatar">${initials}</div><div class="msg-body"><div class="msg-bubble">${escHtml(content)}</div>${metaHtml}</div>`;
+        cw.appendChild(msg);
+        cw.scrollTop = cw.scrollHeight;
+      }
+
+      function escHtml(s) {
+        return s
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\n/g, "<br>");
+      }
+
+      function addTyping() {
+        const cw = document.getElementById("chat-window");
+        const d = document.createElement("div");
+        d.className = "msg assistant";
+        d.id = "typing-msg";
+        d.innerHTML =
+          '<div class="msg-avatar">AI</div><div class="msg-body"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>';
+        cw.appendChild(d);
+        cw.scrollTop = cw.scrollHeight;
+      }
+      function removeTyping() {
+        const t = document.getElementById("typing-msg");
+        if (t) t.remove();
+      }
+
+      function updateStats() {
+        document.getElementById("stat-input").textContent =
+          sessionInput.toLocaleString();
+        document.getElementById("stat-output").textContent =
+          sessionOutput.toLocaleString();
+        document.getElementById("stat-cost").textContent =
+          "$" + sessionCost.toFixed(4);
+        document.getElementById("stat-msgs").textContent = sessionMsgs;
+        const hw = document.getElementById("history-warning");
+        const hc = document.getElementById("history-count");
+        if (history.length >= 10) {
+          hw.classList.add("show");
+          hc.textContent = history.length;
+        } else {
+          hw.classList.remove("show");
+        }
+      }
+
+      async function sendMessage() {
+        if (isLoading) return;
+        const apiKey =
+          localStorage.getItem("claude_api_key") ||
+          document.getElementById("api-key").value.trim();
+        if (!apiKey) {
+          showError("Please enter and save your API key first.");
+          return;
+        }
+        const input = document.getElementById("msg-input");
+        const text = input.value.trim();
+        if (!text) return;
+
+        hideError();
+        isLoading = true;
+        document.getElementById("send-btn").disabled = true;
+        input.value = "";
+        input.style.height = "auto";
+        updateTokenCounter();
+
+        addMessage("user", text);
+        history.push({ role: "user", content: text });
+        addTyping();
+
+        const sysPrompt = document.getElementById("sys-prompt").value.trim();
+        const model = MODELS[currentModel];
+
+        try {
+          const body = {
+            model: currentModel,
+            max_tokens: 1024,
+            messages: history,
+          };
+          if (sysPrompt) body.system = sysPrompt;
+
+          const res = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": apiKey,
+              "anthropic-version": "2023-06-01",
+              "anthropic-dangerous-direct-browser-access": "true",
+            },
+            body: JSON.stringify(body),
+          });
+          const data = await res.json();
+          removeTyping();
+
+          if (!res.ok) {
+            showError(
+              data?.error?.message ||
+                "API error. Check your key and try again.",
+            );
+            history.pop();
+            isLoading = false;
+            document.getElementById("send-btn").disabled = false;
+            return;
+          }
+
+          const reply = data.content[0].text;
+          const usage = data.usage;
+          const inTok = usage.input_tokens,
+            outTok = usage.output_tokens;
+          const cost =
+            (inTok / 1e6) * model.input + (outTok / 1e6) * model.output;
+
+          sessionInput += inTok;
+          sessionOutput += outTok;
+          sessionCost += cost;
+          sessionMsgs++;
+          updateStats();
+          history.push({ role: "assistant", content: reply });
+          addMessage("assistant", reply, {
+            input_tokens: inTok,
+            output_tokens: outTok,
+            cost,
+          });
+        } catch (err) {
+          removeTyping();
+          showError("Network error. Check your connection and try again.");
+          history.pop();
+        }
+
+        isLoading = false;
+        document.getElementById("send-btn").disabled = false;
+        input.focus();
+      }
+
+      function clearChat() {
+        history = [];
+        sessionInput = 0;
+        sessionOutput = 0;
+        sessionCost = 0;
+        sessionMsgs = 0;
+        updateStats();
+        document.getElementById("chat-window").innerHTML =
+          '<div class="chat-empty" id="chat-empty"><div style="font-size:32px;opacity:0.3;">💬</div><div style="font-size:14px;color:var(--text3);">Enter your API key above and start chatting</div><div style="font-size:12px;color:var(--text3);">Every message shows exact token counts and live cost</div></div>';
+        document.getElementById("history-warning").classList.remove("show");
+      }
+
+      function calcSelect(model, el) {
+        calcModel = model;
+        document
+          .querySelectorAll(".calc-model-btn")
+          .forEach((b) => b.classList.remove("active"));
+        el.classList.add("active");
+        calcUpdate();
+      }
+
+      function calcUpdate() {
+        const msgs = parseInt(document.getElementById("c-msgs").value);
+        const inp = parseInt(document.getElementById("c-inp").value);
+        const out = parseInt(document.getElementById("c-out").value);
+        document.getElementById("c-msgs-v").textContent = msgs;
+        document.getElementById("c-inp-v").textContent = inp;
+        document.getElementById("c-out-v").textContent = out;
+        const p = CALC_MODELS[calcModel];
+        const perMsg = (inp / 1e6) * p.input + (out / 1e6) * p.output;
+        const monthly = perMsg * msgs * 30;
+        const days = perMsg * msgs > 0 ? Math.round(20 / (perMsg * msgs)) : 999;
+        document.getElementById("c-permsg").textContent =
+          "$" + perMsg.toFixed(5);
+        document.getElementById("c-monthly").textContent =
+          "$" + monthly.toFixed(2);
+        document.getElementById("c-days").textContent =
+          days > 365 ? "1+ year" : days + " days";
+        const v = document.getElementById("c-verdict");
+        if (monthly < 5) {
+          v.className = "verdict good";
+          v.innerHTML = `<strong>API is great for you.</strong> At $${monthly.toFixed(2)}/month you'd spend far less than $20 Pro. Top up $5 and you're set for months.`;
+        } else if (monthly < 20) {
+          v.className = "verdict mid";
+          v.innerHTML = `<strong>API saves you money.</strong> $${monthly.toFixed(2)}/month — cheaper than the $20 flat fee, with full token visibility and no message caps.`;
+        } else {
+          v.className = "verdict high";
+          v.innerHTML = `<strong>Consider staying on Pro.</strong> At $${monthly.toFixed(2)}/month on API, the $20 flat rate may be better value for your usage pattern.`;
+        }
+      }
+
+      window.onload = () => {
+        const saved = localStorage.getItem("claude_api_key");
+        if (saved) {
+          document.getElementById("api-key").value = saved;
+          const s = document.getElementById("key-status");
+          s.textContent = "✓ Saved";
+          s.style.background = "var(--green-bg)";
+          s.style.color = "var(--green)";
+          s.style.borderColor = "rgba(52,211,153,0.2)";
+        }
+        calcUpdate();
+        const ta = document.getElementById("msg-input");
+        ta.addEventListener("input", function () {
+          this.style.height = "auto";
+          this.style.height = Math.min(this.scrollHeight, 160) + "px";
+        });
+      };
+    </script>
+  </body>
+</html>
