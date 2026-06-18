@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Claude Token Explorer — Understand your AI costs</title>
+    <title>Claude Token Explorer -> Understand your AI costs</title>
     <meta
       name="description"
       content="A free tool to understand Claude API tokens, pricing, and how to save money. No signup required."
@@ -1266,8 +1266,8 @@
               <strong style="color: var(--text)"
                 >exact token counts and cost per message</strong
               >
-              — something neither claude.ai nor the Anthropic Console shows you
-              in real time.<br />
+              something neither claude.ai nor the Anthropic Console shows you in
+              real time.<br />
               <span
                 style="
                   color: var(--text3);
@@ -1322,7 +1322,7 @@
               rel="noopener"
               >Get one at console.anthropic.com</a
             >
-            — top up $5 to start. Key saved in your browser's localStorage only.
+            top up $5 to start. Key saved in your browser's localStorage only.
             Never sent to any server except Anthropic's directly.
             <a
               href="#"
@@ -1342,19 +1342,19 @@
               class="model-btn"
               onclick="selectModel('claude-haiku-4-5-20251001', this)"
             >
-              Haiku 4.5 — cheapest
+              Haiku 4.5 : cheapest
             </button>
             <button
               class="model-btn active"
               onclick="selectModel('claude-sonnet-4-6', this)"
             >
-              Sonnet 4.6 — balanced
+              Sonnet 4.6 : balanced
             </button>
             <button
               class="model-btn"
               onclick="selectModel('claude-opus-4-6', this)"
             >
-              Opus 4.6 — powerful
+              Opus 4.6 : powerful
             </button>
           </div>
           <div class="model-info" id="model-info">
@@ -1393,7 +1393,7 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
         </div>
 
         <div class="history-warning" id="history-warning">
-          ⚠️ Long conversation — your history is now
+          ⚠️ Long conversation your history is now
           <span id="history-count">0</span> messages. Every new reply re-reads
           all of it as input. On Claude Pro, this is burning your daily limit
           faster. Consider starting a new chat for a new topic.
@@ -1584,7 +1584,7 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
           <div class="tip-title">How far does $20 go?</div>
           <div class="tip-body">
             On Sonnet 4.6 with realistic mixed usage, $20 covers roughly 2–3
-            million tokens — thousands of normal conversations.
+            million tokens thousands of normal conversations.
           </div>
         </div>
         <div class="built-by" style="margin-top: 2rem">
@@ -1723,7 +1723,7 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
 
         <!-- PRO LIMIT EXPLAINER -->
         <div class="card" style="margin-bottom: 14px">
-          <div class="card-title">Pro plan — how limits actually work</div>
+          <div class="card-title">Pro plan how limits actually work</div>
           <div
             style="
               display: grid;
@@ -1813,7 +1813,7 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
           >
             <strong style="color: var(--accent)">Usage credits on Pro:</strong>
             When you hit your session limit, you can enable "Usage credits" in
-            Settings → Usage to keep going at standard API rates — without
+            Settings → Usage to keep going at standard API rates without
             switching plans. It's pay-as-you-go on top of your $20 subscription.
           </div>
         </div>
@@ -1824,15 +1824,15 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
             API users: deeper analytics at console.anthropic.com
           </div>
           <div class="tip-body">
-            The Anthropic Console gives API users a full dashboard — breakdown
-            by model, API key, and date down to minute granularity, rate limit
+            The Anthropic Console gives API users a full dashboard breakdown by
+            model, API key, and date down to minute granularity, rate limit
             visualizations, and CSV export. Our tool shows you per-message live
             cost; the Console shows your historical aggregate usage.
           </div>
         </div>
 
         <div class="card">
-          <div class="card-title">Cost calculator — which plan suits you?</div>
+          <div class="card-title">Cost calculator which plan suits you?</div>
           <div class="calc-inputs">
             <div>
               <div
@@ -1962,7 +1962,7 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
                 <div class="step-title">Create an API key</div>
                 <div class="step-desc">
                   Click "API Keys" in the sidebar → "Create Key". Give it a
-                  name. Copy the key — it starts with
+                  name. Copy the key it starts with
                   <code
                     style="
                       font-family: var(--mono);
@@ -1990,7 +1990,7 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
         <div style="margin-bottom: 1.5rem">
           <div class="sec-title">What is a token?</div>
           <div class="sec-sub">
-            Claude doesn't read words — it reads chunks called tokens.
+            Claude doesn't read words it reads chunks called tokens.
             Understanding tokens is key to understanding costs.
           </div>
         </div>
@@ -2067,10 +2067,10 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
         </div>
 
         <div class="card" style="margin-bottom: 1.5rem">
-          <div class="card-title">Heavy vs light prompt — real difference</div>
+          <div class="card-title">Heavy vs light prompt real difference</div>
           <div class="token-demo">
             <div class="token-box">
-              <div class="token-box-label light">✓ Light — efficient</div>
+              <div class="token-box-label light">✓ Light efficient</div>
               <div class="token-box-text">"Summarize in 3 bullets: [text]"</div>
               <div class="token-count light">~12 tokens</div>
               <div
@@ -2080,7 +2080,7 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
               </div>
             </div>
             <div class="token-box">
-              <div class="token-box-label heavy">✗ Heavy — wasteful</div>
+              <div class="token-box-label heavy">✗ Heavy wasteful</div>
               <div class="token-box-text">
                 "Hey! Hope you're well. Could you please, if you don't mind,
                 maybe summarize this? Thanks so much!"
@@ -2124,8 +2124,8 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
             <span class="tip-num">1</span>Ask for shorter output explicitly
           </div>
           <div class="tip-body">
-            "In 2 sentences", "3 bullets only" — output costs 5× more than
-            input. Biggest single saving.
+            "In 2 sentences", "3 bullets only" output costs 5× more than input.
+            Biggest single saving.
           </div>
         </div>
         <div class="tip">
@@ -2187,7 +2187,7 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
             <span class="tip-num">8</span>Skip the pleasantries
           </div>
           <div class="tip-body">
-            "Please", "thank you", "could you kindly" — adds tokens with zero
+            "Please", "thank you", "could you kindly" adds tokens with zero
             benefit to output quality.
           </div>
         </div>
@@ -2196,7 +2196,7 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
         <div style="margin-top: 2rem; margin-bottom: 1.5rem">
           <div class="sec-title">What Pro users can actually see</div>
           <div class="sec-sub">
-            We said Pro has no token visibility — that's partially wrong. Here's
+            We said Pro has no token visibility that's partially wrong. Here's
             the full picture.
           </div>
         </div>
@@ -2270,7 +2270,7 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
         <div class="tip" style="border-left-color: var(--amber)">
           <div class="tip-title">Why does my Pro session drain so fast?</div>
           <div class="tip-body">
-            Limits are compute-weighted — not message-count. One message with a
+            Limits are compute-weighted not message-count. One message with a
             50-page PDF + Opus model + Research tool enabled can drain your
             5-hour session faster than 20 short Haiku messages. Long
             conversation history also compounds on every turn.
@@ -2313,7 +2313,7 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
               <div
                 style="font-size: 13px; color: var(--text2); line-height: 1.5"
               >
-                Wipes full conversation history. Start fresh — project files and
+                Wipes full conversation history. Start fresh project files and
                 CLAUDE.md stay. Use when switching tasks.
                 <strong style="color: var(--amber)">Cannot be undone.</strong>
               </div>
@@ -2411,7 +2411,7 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
         </div>
         <div class="tip" style="border-left-color: var(--green)">
           <div class="tip-title">
-            ccusage — track Claude Code usage from terminal
+            ccusage rack Claude Code usage from terminal
           </div>
           <div class="tip-body">
             <code
@@ -2434,7 +2434,7 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
               "
               >npx ccusage blocks</code
             >
-            — shows usage by 5-hour billing window<br />
+            shows usage by 5-hour billing window<br />
             <code
               style="
                 font-family: var(--mono);
@@ -2443,7 +2443,7 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
               "
               >npx ccusage daily --breakdown</code
             >
-            — per-model cost breakdown
+            per-model cost breakdown
           </div>
         </div>
       </div>
@@ -2560,13 +2560,13 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
           hint.textContent = "";
         } else if (est < 200) {
           hint.className = "pro-hint light";
-          hint.textContent = "🟢 Light — low Pro limit burn";
+          hint.textContent = "🟢 Light —> low Pro limit burn";
         } else if (est < 800) {
           hint.className = "pro-hint medium";
-          hint.textContent = "🟡 Medium — moderate Pro limit burn";
+          hint.textContent = "🟡 Medium —> moderate Pro limit burn";
         } else {
           hint.className = "pro-hint heavy";
-          hint.textContent = "🔴 Heavy — high Pro limit burn";
+          hint.textContent = "🔴 Heavy —> high Pro limit burn";
         }
       }
 
@@ -2780,7 +2780,7 @@ Be concise. Answer directly. No filler, no restating my question.</textarea
           v.innerHTML = `<strong>API is great for you.</strong> At $${monthly.toFixed(2)}/month you'd spend far less than $20 Pro. Top up $5 and you're set for months.`;
         } else if (monthly < 20) {
           v.className = "verdict mid";
-          v.innerHTML = `<strong>API saves you money.</strong> $${monthly.toFixed(2)}/month — cheaper than the $20 flat fee, with full token visibility and no message caps.`;
+          v.innerHTML = `<strong>API saves you money.</strong> $${monthly.toFixed(2)}/month cheaper than the $20 flat fee, with full token visibility and no message caps.`;
         } else {
           v.className = "verdict high";
           v.innerHTML = `<strong>Consider staying on Pro.</strong> At $${monthly.toFixed(2)}/month on API, the $20 flat rate may be better value for your usage pattern.`;
